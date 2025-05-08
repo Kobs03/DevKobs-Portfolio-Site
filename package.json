@@ -6,12 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
     "preview": "vite preview",
     "format": "prettier --write src/"
   },
   "dependencies": {
     "@primeuix/themes": "^1.0.3",
     "primevue": "^4.3.3",
+    "three": "^0.176.0",
+    "vanta": "^0.5.24",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },

@@ -1,15 +1,30 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue"
+import NET from 'vanta/dist/vanta.net.min'
+import * as THREE from 'three'
 
 // ========== Life Cycle Section ============
 
+const vantaRef = ref(null)
+let vantaEffect = null
+
 onMounted(() => {
+  vantaEffect = NET({
+    el: vantaRef.value,
+    THREE,
+    color: 0x888888,
+    backgroundColor: 0x1e1e2f,   // <-- background
+    points: 10.0,
+    maxDistance: 15.0,
+    spacing: 20.0
+  })
   initializeGameBoard();
   window.addEventListener('keydown', handleKeydown);
 });
 
 onBeforeUnmount(() => {
   window.addEventListener('keydown', handleKeydown);
+  if (vantaEffect) vantaEffect.destroy()
 })
 
 // ========== Variables Section ============
@@ -21,13 +36,13 @@ const containerWidthInRem = ref(69)
 const totalCells = ref([]);
 
 let blocks = ref([
-  { id: 'A', xAxis: 0, yAxis: 0, width: 2, height: 2, message: "Introduction" },      // 2x2
+  { id: 'A', xAxis: 0, yAxis: 0, width: 2, height: 2, message: "Jake Dedicatoria" },  // 2x2
   { id: 'B', xAxis: 0, yAxis: 2, width: 2, height: 1, message: "Skills" },            // 2x1
-  { id: 'C', xAxis: 2, yAxis: 0, width: 2, height: 1, message: "Work Exp" },          // 1x2
-  { id: 'D', xAxis: 2, yAxis: 1, width: 2, height: 1, message: "Educ Background" },   // 2x1
+  { id: 'C', xAxis: 2, yAxis: 0, width: 2, height: 1, message: "Work Experience" },          // 1x2
+  { id: 'D', xAxis: 2, yAxis: 1, width: 2, height: 1, message: "Education" },         // 2x1
   { id: 'E', xAxis: 2, yAxis: 2, width: 2, height: 1, message: "Projects" },          // 2x1
   { id: 'F', xAxis: 0, yAxis: 3, width: 1, height: 1, message: "Contact" },           // 1x1
-  { id: 'G', xAxis: 1, yAxis: 3, width: 1, height: 1, message: "Pic" },               // 1x1
+  { id: 'G', xAxis: 1, yAxis: 3, width: 1, height: 1, message: "Socials" },               // 1x1
   { id: 'H', xAxis: 2, yAxis: 3, width: 1, height: 1, message: "Hello" },             // 1x1
   { id: 'I', xAxis: 3, yAxis: 3, width: 1, height: 1, message: "Pic" }                // 1x1
 ])
@@ -138,56 +153,70 @@ function moveDown(block) {
 
 <template>
 
-  <main class="flex flex-col w-screen h-screen bg-[#fefae0] center-all">
+  <div ref="vantaRef" class="relative w-screen h-screen">
 
-    <!-- Portfolio Header -->
-    <div class="flex items-center w-[69rem] h-[4rem] mb-2 bg-slate-300">
+    <div class="relative z-10 text-white text-center h-full center-all">
 
-      <div class="center-all bg-slate-500 h-[3rem] w-[3rem] rounded-md font-bold m-2 text-white cursor-pointer">JD</div>
+      <main class="flex flex-col center-all w-full h-full">
 
-      <div class="flex flex-col">
-        <div class="ml-3 mb-2 flex items-center cursor-pointer">
-          <p class="text-[1.15rem] font-semibold">Game Mode </p>
+        <!-- Portfolio Header -->
+        <div
+          class="flex items-center w-[69rem] h-[4rem] mb-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-md">
+
+          <div class="center-all bg-slate-500 h-[3rem] w-[3rem] rounded-md font-bold m-2 text-white cursor-pointer">JD
+          </div>
+
+          <div class="flex flex-col text-[#4F4F4F]">
+            <div class="ml-3 mb-1 flex items-center cursor-pointer">
+              <p class="text-[1.15rem] text-white font-semibold"> Home </p>
+            </div>
+            <div class="bg-slate-500 border-b-4 border-slate-500 ml-3 w-full"></div>
+          </div>
+
+          <!-- <div class="bg-slate-500 ml-auto mr-4 px-4 py-2 text-white rounded">L and D mode</div> -->
+
         </div>
-        <div class="bg-slate-500 border-b-4 border-slate-500 ml-3 w-full"></div>
-      </div>
 
-      <div class="bg-slate-500 ml-auto mr-4 px-4 py-2 text-white rounded">L and D mode</div>
+
+        <!-- Container for grid and blocks -->
+        <div :class="`relative w-[${containerWidthInRem}rem]`">
+          <!-- Grid Wrapper -->
+          <div class="grid grid-cols-5 bg-white/10 backdrop-blur-md border border-white/20 ">
+            <div v-for="(cell, index) in totalCells" :key="`${cell.x}-${cell.y}`"
+              class="w-[220px] h-[195px] border border-[#8D8D8D] text-xs center-all ">
+              <!-- index {{ index }} -->
+            </div>
+          </div>
+
+          <!-- Blocks Rendering (absolute within relative container) -->
+          <div v-for="block in blocks" :key="block.id" @click="selectBlockToMove(block)" :class="[
+            'absolute text-white text-[1.5rem] flex flex-col justify-end cursor-pointer bg-white/10 backdrop-blur-md border border-white/50',
+            block.id === 'A'
+              ? 'bg-white/25 backdrop-blur-md hover:bg-white/35 transition duration-300'
+              : 'bg-white/15 backdrop-blur-md hover:bg-white/25 transition duration-300'
+          ]" :style="{
+            left: `${block.xAxis * 221}px`,
+            top: `${block.yAxis * 195}px`,
+            width: `${block.width * 221}px`,
+            height: `${block.height * 195}px`,
+          }">
+
+            <div class="w-full h-[5rem] flex justify-end center-y">
+              <p class="mr-5">
+                < {{ block.message }} />
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </main>
+
 
     </div>
+  </div>
 
-
-    <!-- Container for grid and blocks -->
-    <div :class="`relative w-[${containerWidthInRem}rem]`">
-
-      <!-- Grid Wrapper -->
-      <div class="grid grid-cols-5 bg-[#f5deb3] border border-slate-500 ">
-        <div v-for="(cell, index) in totalCells" :key="`${cell.x}-${cell.y}`"
-          class="w-[220px] h-[195px]  border border-white text-xs center-all ">
-          <!-- index {{ index }} -->
-        </div>
-      </div>
-
-      <!-- Blocks Rendering (absolute within relative container) -->
-      <div v-for="block in blocks" :key="block.id" @click="selectBlockToMove(block)" :class="[
-        'absolute text-[#5c4033] text-[1.5rem] flex center-all cursor-pointer border border-[#7a5b3c] hover:bg-slate-500',
-        block.id === 'A'
-          ? 'bg-[#b08968] hover:bg-[#a07556]'
-          : 'bg-[#d2b48c] hover:bg-[#c4a67c]'
-      ]" :style="{
-        left: `${block.xAxis * 221}px`,
-        top: `${block.yAxis * 195}px`,
-        width: `${block.width * 221}px`,
-        height: `${block.height * 195}px`,
-      }">
-        {{ block.message }}
-        <!-- {{ block.id }} - ( x : {{ block.xAxis }}, y : {{ block.yAxis }} ) -->
-
-      </div>
-
-    </div>
-
-  </main>
 
 
 </template>
