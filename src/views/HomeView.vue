@@ -200,8 +200,8 @@ function moveDown(block) {
           <div v-for="block in blocks" :key="block.id" @click="selectBlockToMove(block)" :class="[
             'absolute text-white text-[1.5rem] flex flex-col justify-end cursor-pointer bg-white/10 backdrop-blur-lg border border-white/50 ',
             block.id === 'A'
-              ? 'bg-[#000000]/40 backdrop-blur-md hover:bg-white/35 transition duration-300'
-              : 'bg-[#000000]/20 backdrop-blur-md hover:bg-white/25 transition duration-300'
+              ? 'bg-[#000000]/50 backdrop-blur-md hover:bg-white/35 transition duration-300'
+              : 'bg-[#000000]/30 backdrop-blur-md hover:bg-white/25 transition duration-300'
           ]" :style="{
             left: `${block.xAxis * 221}px`,
             top: `${block.yAxis * 195}px`,
