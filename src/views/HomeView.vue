@@ -198,17 +198,14 @@ function moveDown(block) {
           <!-- Blocks Rendering (absolute within relative container) -->
 
           <div v-for="block in blocks" :key="block.id" @click="selectBlockToMove(block)" :class="[
-            'absolute text-white text-[1.5rem] flex flex-col justify-end cursor-pointer bg-white/10 backdrop-blur-lg border border-white/50 ',
-            block.id === 'A'
-              ? 'bg-[#000000]/40 backdrop-blur-md hover:bg-white/20 transition duration-300'
-              : 'bg-[#000000]/20 backdrop-blur-md hover:bg-white/10 transition duration-300'
+            'absolute text-white text-[1.5rem] flex flex-col justify-end cursor-pointer border backdrop-blur-md transition duration-300',
+            block.id === 'A' ? 'bg-black/50 hover:bg-white/40 border-white/60' : 'bg-black/30 hover:bg-white/30 border-white/40'
           ]" :style="{
             left: `${block.xAxis * 221}px`,
             top: `${block.yAxis * 195}px`,
             width: `${block.width * 221}px`,
             height: `${block.height * 195}px`,
           }">
-
             <div v-if="block.id !== 'A'" class="w-full h-[5rem] flex items-end center-y flex-col">
               <p class="mr-5 font-semibold">
                 {{ block.labelName }} ;
