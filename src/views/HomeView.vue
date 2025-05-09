@@ -36,15 +36,15 @@ const containerWidthInRem = ref(69)
 const totalCells = ref([]);
 
 let blocks = ref([
-  { id: 'A', xAxis: 0, yAxis: 0, width: 2, height: 2, message: "Jake Dedicatoria" },  // 2x2
-  { id: 'B', xAxis: 0, yAxis: 2, width: 2, height: 1, message: "Skills" },            // 2x1
-  { id: 'C', xAxis: 2, yAxis: 0, width: 2, height: 1, message: "Work Experience" },          // 1x2
-  { id: 'D', xAxis: 2, yAxis: 1, width: 2, height: 1, message: "Education" },         // 2x1
-  { id: 'E', xAxis: 2, yAxis: 2, width: 2, height: 1, message: "Projects" },          // 2x1
-  { id: 'F', xAxis: 0, yAxis: 3, width: 1, height: 1, message: "Contact" },           // 1x1
-  { id: 'G', xAxis: 1, yAxis: 3, width: 1, height: 1, message: "Socials" },               // 1x1
-  { id: 'H', xAxis: 2, yAxis: 3, width: 1, height: 1, message: "Hello" },             // 1x1
-  { id: 'I', xAxis: 3, yAxis: 3, width: 1, height: 1, message: "Pic" }                // 1x1
+  { id: 'A', xAxis: 0, yAxis: 0, width: 2, height: 2, labelName: "DevKobs" },  // 2x2
+  { id: 'B', xAxis: 0, yAxis: 2, width: 2, height: 1, labelName: "Tech Tools" },            // 2x1
+  { id: 'C', xAxis: 2, yAxis: 0, width: 2, height: 1, labelName: "Professional Experience" },   // 1x2
+  { id: 'D', xAxis: 2, yAxis: 1, width: 2, height: 1, labelName: "Educational Background" },         // 2x1
+  { id: 'E', xAxis: 2, yAxis: 2, width: 2, height: 1, labelName: "Projects" },          // 2x1
+  { id: 'F', xAxis: 0, yAxis: 3, width: 1, height: 1, labelName: "Contact Me" },           // 1x1
+  { id: 'G', xAxis: 1, yAxis: 3, width: 1, height: 1, labelName: "GitHub" },           // 1x1
+  { id: 'H', xAxis: 2, yAxis: 3, width: 1, height: 1, labelName: "LinkedIn" },             // 1x1
+  { id: 'I', xAxis: 3, yAxis: 3, width: 1, height: 1, labelName: "Pic" }                // 1x1
 ])
 
 // ========== Event Listeners ==============
@@ -163,7 +163,8 @@ function moveDown(block) {
         <div
           class="flex items-center w-[69rem] h-[4rem] mb-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-md">
 
-          <div class="center-all bg-slate-500 h-[3rem] w-[3rem] rounded-md font-bold m-2 text-white cursor-pointer">JD
+          <div class="center-all bg-slate-500 h-[3rem] w-[3rem] rounded-md font-bold m-2 text-white cursor-pointer">
+            J<span class="text-[#77FFA4]">D</span>
           </div>
 
           <div class="flex flex-col text-[#4F4F4F]">
@@ -180,20 +181,27 @@ function moveDown(block) {
 
         <!-- Container for grid and blocks -->
         <div :class="`relative w-[${containerWidthInRem}rem]`">
+
           <!-- Grid Wrapper -->
-          <div class="grid grid-cols-5 bg-white/10 backdrop-blur-md border border-white/20 ">
-            <div v-for="(cell, index) in totalCells" :key="`${cell.x}-${cell.y}`"
-              class="w-[220px] h-[195px] border border-[#8D8D8D] text-xs center-all ">
-              <!-- index {{ index }} -->
+          <div class="grid grid-cols-5 bg-white/10 backdrop-blur-md border border-white/20">
+            <div v-for="(cell, index) in totalCells" :key="`${cell.x}-${cell.y}`" :class="[
+              'w-[220px] h-[195px] text-sm center-all',
+              index === 13 ? 'border-t-2 border-l-2 border-t-[#77FFA4] border-l-[#77FFA4] drop-shadow-[0_0_10px_#77FFA4]' : '',
+              index === 14 ? 'border-t-2 border-r-2 border-t-[#77FFA4] border-r-[#77FFA4] drop-shadow-[0_0_10px_#77FFA4] ' : '',
+              index === 18 ? 'border-b-2 border-l-2 border-b-[#77FFA4] border-l-[#77FFA4] drop-shadow-[0_0_10px_#77FFA4]' : '',
+              index === 19 ? 'border-b-2 border-r-2 border-b-[#77FFA4] border-r-[#77FFA4] drop-shadow-[0_0_10px_#77FFA4] ' : '',
+              'border border-[#8D8D8D]'
+            ]">
             </div>
           </div>
 
           <!-- Blocks Rendering (absolute within relative container) -->
+
           <div v-for="block in blocks" :key="block.id" @click="selectBlockToMove(block)" :class="[
-            'absolute text-white text-[1.5rem] flex flex-col justify-end cursor-pointer bg-white/10 backdrop-blur-md border border-white/50',
+            'absolute text-white text-[1.5rem] flex flex-col justify-end cursor-pointer bg-white/10 backdrop-blur-lg border border-white/50 ',
             block.id === 'A'
-              ? 'bg-white/25 backdrop-blur-md hover:bg-white/35 transition duration-300'
-              : 'bg-white/15 backdrop-blur-md hover:bg-white/25 transition duration-300'
+              ? 'bg-[#000000]/40 backdrop-blur-md hover:bg-white/35 transition duration-300'
+              : 'bg-[#000000]/20 backdrop-blur-md hover:bg-white/25 transition duration-300'
           ]" :style="{
             left: `${block.xAxis * 221}px`,
             top: `${block.yAxis * 195}px`,
@@ -201,10 +209,22 @@ function moveDown(block) {
             height: `${block.height * 195}px`,
           }">
 
-            <div class="w-full h-[5rem] flex justify-end center-y">
-              <p class="mr-5">
-                < {{ block.message }} />
+            <div v-if="block.id !== 'A'" class="w-full h-[5rem] flex items-end center-y flex-col">
+              <p class="mr-5 font-semibold">
+                {{ block.labelName }} ;
               </p>
+              <p class="text-[0.8rem] text-[#77FFA4] mr-5 mt-1"> <- Tap to view content </p>
+            </div>
+
+            <div v-if="block.id === 'A'" class="w-full h-full center-all flex flex-col">
+              <p class="text-[2.5rem] font-semibold">
+                Dev<span class="text-[#77FFA4]">Kobs</span> ;
+              </p>
+              <p class="text-[1.2rem] ">
+                <span class="text-[#77FFA4]">
+                  < </span> Fullstack Web Developer <span class="text-[#77FFA4]">/></span>
+              </p>
+              <p class="text-[1rem] text-[#77FFA4] items mt-2"> - Tap to view content - </p>
             </div>
 
           </div>
